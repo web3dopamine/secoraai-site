@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Secoraai Sdn. Bhd. builds Secora Cyber Agent, an agentic AI security analyst for mid-sized organisations and managed security service providers.">
+<title>Secoraai</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one narrow column of plain sections; the only bold move is a live "triage queue" in the hero. */
+:root{
+  --bg:#EDF0F2;
+  --surface:#FFFFFF;
+  --ink:#0F1B26;
+  --muted:#4B5A68;
+  --line:#CDD5DB;
+  --accent:#C2410C;
+  --accent-ink:#FFFFFF;
+  --ok:#1F7A4D;
+  --band:#0F1B26;
+  --band-ink:#E8EDF1;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C141B;--surface:#14202B;--ink:#E8EDF1;--muted:#9BAAB7;--line:#27384A;--accent:#F28A4B;--accent-ink:#0C141B;--ok:#5FD196;--band:#05090D;--band-ink:#E8EDF1;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C141B;--surface:#14202B;--ink:#E8EDF1;--muted:#9BAAB7;--line:#27384A;--accent:#F28A4B;--accent-ink:#0C141B;--ok:#5FD196;--band:#05090D;--band-ink:#E8EDF1;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.label{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:20px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em}
+.brand b{color:var(--accent)}
+.status{font-family:var(--f-mono);font-size:.78rem;border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:var(--muted)}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:start;padding-block:36px 56px}
+.hero p.lead{font-size:1.15rem;color:var(--muted);margin-top:20px;max-width:34em}
+.hero .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{font-size:.85rem;border:1px solid var(--line);background:var(--surface);padding:5px 12px;border-radius:999px}
+.queue{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
+.queue-head{display:flex;justify-content:space-between;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.alert{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;
+  background:none;border:0;border-bottom:1px solid var(--line);padding:12px 14px;color:inherit;font:inherit;cursor:pointer}
+.alert:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.alert[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.sev{font-family:var(--f-mono);font-size:.72rem;padding:2px 8px;border-radius:4px;border:1px solid currentColor}
+.sev.hi{color:var(--accent)}.sev.lo{color:var(--muted)}
+.alert .t{font-size:.92rem;min-width:0;overflow-wrap:anywhere}
+.alert .s{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
+.detail{padding:14px;font-size:.92rem;display:grid;gap:10px}
+.detail .row{display:grid;grid-template-columns:7.5em 1fr;gap:10px}
+.detail .row span:first-child{font-family:var(--f-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-top:2px}
+.approve{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{font:inherit;font-weight:600;font-size:.9rem;padding:8px 14px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:default}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.note{font-size:.8rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--line)}
+section.block{padding-block:56px;border-top:1px solid var(--line)}
+section.block>.label{margin-bottom:10px}
+section.block>h2{margin-bottom:28px;max-width:22em}
+.grid{display:grid;gap:20px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.stat .n{font-family:var(--f-display);font-size:2.4rem;font-weight:700;line-height:1;letter-spacing:-.02em}
+.stat p{color:var(--muted);margin-top:8px;font-size:.95rem}
+.stat small{display:block;margin-top:8px;font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:0}
+.mod .label{margin-bottom:6px}
+.mod p{color:var(--muted);margin-top:8px;font-size:.95rem}
+.mod .hc{margin-top:12px;font-size:.85rem;border-top:1px dashed var(--line);padding-top:10px;color:var(--ink)}
+.flow{display:flex;flex-wrap:wrap;gap:0;align-items:stretch;margin-top:8px}
+.flow>div{flex:1 1 150px;padding:16px;border:1px solid var(--line);background:var(--surface);margin:-1px 0 0 -1px;min-width:0}
+.flow>div.human{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.flow .k{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.flow strong{display:block;margin-top:4px;font-family:var(--f-display)}
+ul.plain{margin:0;padding-left:1.1em;display:grid;gap:8px}
+.band{background:var(--band);color:var(--band-ink);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.band .label{color:#9FB0BE}
+table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:.95rem}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.scroll{overflow-x:auto}
+.person{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:0}
+.person p{color:var(--muted);margin-top:8px;font-size:.95rem}
+.person .role{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);margin-top:2px}
+footer{padding-block:36px 56px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem;display:grid;gap:8px}
+@media (max-width:820px){.hero{grid-template-columns:1fr;gap:28px}.detail .row{grid-template-columns:1fr;gap:2px}}
+@media (prefers-reduced-motion:no-preference){.alert{transition:background .15s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Secora<b>ai</b></div>
+    <div class="status">Pre-launch · Secoraai Sdn. Bhd.</div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <p class="label" style="margin-bottom:14px">Agentic AI for security operations</p>
+        <h1>An AI security analyst that investigates first and acts only when a person approves.</h1>
+        <p class="lead">Secora Cyber Agent is a cloud product, in development in Malaysia, that triages security alerts, investigates them across your existing tools, explains its reasoning and proposes response steps for a person to approve.</p>
+        <div class="facts">
+          <span class="chip">Built in Malaysia</span>
+          <span class="chip">Human approves every action</span>
+          <span class="chip">English and Bahasa Malaysia</span>
+          <span class="chip">Cyber Security Act 2024 reporting</span>
+        </div>
+      </div>
+
+      <div class="queue" aria-label="Illustrative triage queue">
+        <div class="queue-head"><span class="label">Triage queue</span><span class="label">Illustrative example</span></div>
+        <div role="listbox" aria-label="Sample alerts" id="alerts">
+          <button class="alert" role="option" aria-selected="true" data-i="0"><span class="sev hi">HIGH</span><span class="t">Impossible-travel sign-in on finance mailbox</span><span class="s">5 alerts merged</span></button>
+          <button class="alert" role="option" aria-selected="false" data-i="1"><span class="sev hi">MED</span><span class="t">Endpoint beaconing to a newly seen domain</span><span class="s">3 alerts merged</span></button>
+          <button class="alert" role="option" aria-selected="false" data-i="2"><span class="sev lo">LOW</span><span class="t">Repeated failed logins from a known scanner</span><span class="s">41 alerts merged</span></button>
+        </div>
+        <div class="detail" id="detail" aria-live="polite"></div>
+        <div class="note">Sample data written to show the workflow. It is not from a customer or a real incident.</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <p class="label">The problem</p>
+      <h2>Alerts arrive faster than people can read them.</h2>
+      <div class="grid g3">
+        <div class="stat"><div class="n">+23%</div><p>Cyber incident reports to Cyber999 in the first nine months of 2025 (5,735) against the same period of 2024 (4,659).</p><small>Source: Ministry of Digital, via The Vibes and The Star, Dec 2025</small></div>
+        <div class="stat"><div class="n">~12,000</div><p>Estimated shortfall in Malaysian cybersecurity knowledge workers by end-2025: 27,000 needed, 15,248 employed.</p><small>Source: JPK, CIAST and CyberSecurity Malaysia study, via Free Malaysia Today, Aug 2023</small></div>
+        <div class="stat"><div class="n">26 Aug 2024</div><p>The Cyber Security Act 2024 came into force, adding risk assessments, audits and incident-notification duties for critical-infrastructure entities.</p><small>Source: CMS Law, Aug 2024</small></div>
+      </div>
+      <p style="margin-top:28px;max-width:44em;color:var(--muted)">Large enterprises can buy a managed security operations centre. Mid-sized organisations and the providers that serve them often cannot. Secora Cyber Agent is designed for that gap.</p>
+    </section>
+
+    <section class="block">
+      <p class="label">What the product does</p>
+      <h2>Five modules that do first-line analyst work.</h2>
+      <div class="grid g3">
+        <div class="mod"><p class="label">Module 1</p><h3>Alert triage agent</h3><p>Groups and de-duplicates alerts, adds threat intelligence and asset context, scores priority and says why.</p><div class="hc">Analysts can override any score. Every decision is logged.</div></div>
+        <div class="mod"><p class="label">Module 2</p><h3>Investigation agent</h3><p>Pulls related logs and events, builds an incident timeline, maps behaviour to MITRE ATT&amp;CK techniques and drafts a plain-language finding.</p><div class="hc">Findings stay drafts until an analyst confirms them.</div></div>
+        <div class="mod"><p class="label">Module 3</p><h3>Guided response</h3><p>Suggests containment steps such as isolating a host, disabling an account or blocking an indicator, as playbooks.</p><div class="hc">Nothing runs without explicit approval and role-based permission.</div></div>
+        <div class="mod"><p class="label">Module 4</p><h3>Compliance assistant</h3><p>Collects evidence for annual risk assessments and drafts incident notifications aligned to Cyber Security Act timelines.</p><div class="hc">Drafts only. The customer files the notification.</div></div>
+        <div class="mod"><p class="label">Module 5</p><h3>Analyst copilot</h3><p>Lets staff ask questions about their alerts and incidents in English or Bahasa Malaysia.</p><div class="hc">Answers cite the events they come from.</div></div>
+        <div class="mod"><p class="label">Works with</p><h3>Your existing tools</h3><p>Connects through standard APIs and log formats to SIEM, endpoint detection, firewall, email security and cloud audit logs. It does not replace them.</p></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="label">How it works</p>
+      <h2>The agent recommends. A person decides.</h2>
+      <div class="flow">
+        <div><span class="k">Step</span><strong>Alerts arrive</strong>From your existing security tools.</div>
+        <div><span class="k">Agent</span><strong>Triage</strong>Merge, enrich, prioritise.</div>
+        <div><span class="k">Agent</span><strong>Investigate</strong>Timeline and draft finding.</div>
+        <div><span class="k">Agent</span><strong>Propose</strong>Playbook with evidence attached.</div>
+        <div class="human"><span class="k">Person</span><strong>Approve or reject</strong>Logged for audit.</div>
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="label">Design principles</p>
+      <h2>Built around Malaysian requirements.</h2>
+      <div class="grid g2">
+        <ul class="plain">
+          <li><strong>Your data stays yours.</strong> Each customer is isolated. A Malaysian-region hosting option is planned for customers who require it. Customer data will not be used to train shared models.</li>
+          <li><strong>Explainable.</strong> Every conclusion links back to the events behind it, which also helps audit.</li>
+        </ul>
+        <ul class="plain">
+          <li><strong>Local compliance.</strong> Reporting templates for the Cyber Security Act 2024 and the Personal Data Protection Act 1998.</li>
+          <li><strong>Local fit.</strong> Bilingual interface, local support hours and pricing sized for mid-sized organisations and regional managed security providers.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="label">Who it is for</p>
+      <h2>Three kinds of customer.</h2>
+      <div class="grid g3">
+        <div class="mod"><h3>Mid-sized organisations</h3><p>A small IT or security team and no 24x7 security operations centre.</p></div>
+        <div class="mod"><h3>Managed security providers</h3><p>Serve more customers with the same analysts through a white-label edition.</p></div>
+        <div class="mod"><h3>Suppliers to critical infrastructure</h3><p>Show customers the same security discipline the Cyber Security Act 2024 asks of them.</p></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="label">Roadmap</p>
+      <h2>Where the product is, and where it is going.</h2>
+      <div class="scroll"><table>
+        <thead><tr><th>Period</th><th>Milestone</th></tr></thead>
+        <tbody>
+          <tr><td>Oct 2026</td><td>Company incorporated in Malaysia.</td></tr>
+          <tr><td>2027 Q1</td><td>Architecture and security design, first connectors, triage agent prototype on historical data.</td></tr>
+          <tr><td>2027 Q2</td><td>Investigation agent and private pilots with design-partner organisations.</td></tr>
+          <tr><td>2027 Q3</td><td>General availability of triage and investigation, first paying customers.</td></tr>
+          <tr><td>2027 Q4 to 2028</td><td>Guided response with approvals, compliance assistant, white-label edition for managed providers.</td></tr>
+          <tr><td>2029 onward</td><td>Regional expansion in ASEAN and sector packs for finance and healthcare.</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-top:14px;font-size:.85rem;color:var(--muted)">Dates are plans for a pre-launch company and may change.</p>
+    </section>
+
+    <section class="block">
+      <p class="label">Leadership</p>
+      <h2>The people behind Secoraai.</h2>
+      <div class="grid g2">
+        <div class="person"><h3>Vijayshankar Supramaniam</h3><div class="role">Executive Director</div><p>More than 20 years in technology and business leadership, including Executive Director and Senior Vice President at MDT Innovations and international business leadership at IRIS Corporation Berhad. BSc (Hons) Software Engineering, Coventry University. Microsoft Certified Professional.</p></div>
+        <div class="person"><h3>Md Mamonur Rashid</h3><div class="role">Director, Finance</div><p>Qualified accountant (ACCA) with finance and audit experience, currently Finance Manager at MDT Innovations. BSc Applied Accounting, Oxford Brookes University.</p></div>
+      </div>
+      <p style="margin-top:20px;color:var(--muted);max-width:44em">AI and security engineering leads will be hired from 2027. Until then, product direction is led by the Executive Director.</p>
+    </section>
+
+    <section class="block">
+      <p class="label">Company</p>
+      <h2>Secoraai Sdn. Bhd.</h2>
+      <div class="scroll"><table>
+        <tbody>
+          <tr><th>Registration no.</th><td>202601041172 (1703267-M)</td></tr>
+          <tr><th>Incorporated</th><td>7 October 2026, Malaysia</td></tr>
+          <tr><th>Business</th><td>Development of AI software for cybersecurity, sold as a cloud subscription.</td></tr>
+          <tr><th>Stage</th><td>Pre-launch. The product is in development and is not yet available to customers.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <footer>
+    <div>&copy; 2026 Secoraai Sdn. Bhd. All rights reserved.</div>
+    <div>Secora Cyber Agent is a working product name. Market figures come from the public sources named above; some alert-volume figures in the wider industry are from vendor-sponsored surveys and are not Malaysia-specific. The queue example near the top of this page is illustrative sample data.</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var data=[
+    {sum:"Five alerts about one user signing in from two countries within 20 minutes, with a new mail-forwarding rule created in between.",why:"Same account, impossible travel, followed by a forwarding rule. Matches a common account-takeover pattern (MITRE ATT&CK T1078, T1114).",next:"Propose: force sign-out, reset password and review the forwarding rule."},
+    {sum:"Three alerts about one laptop contacting a domain first seen this week at regular intervals.",why:"Regular timing and a new domain suggest command-and-control beaconing. Domain age and the process that opened the connection are attached as evidence.",next:"Propose: isolate the laptop and block the domain."},
+    {sum:"Forty-one failed logins from one address already tagged as an internet scanner, none successful.",why:"Known scanner, no successful login, no follow-on activity in the logs.",next:"Propose: close as benign noise and add the address to the watch list."}
+  ];
+  var list=document.getElementById('alerts'),detail=document.getElementById('detail');
+  function show(i){
+    var d=data[i];
+    detail.innerHTML='<div class="row"><span>Summary</span><span>'+d.sum+'</span></div>'+
+      '<div class="row"><span>Agent reasoning</span><span>'+d.why+'</span></div>'+
+      '<div class="row"><span>Next step</span><span>'+d.next+'</span></div>'+
+      '<div class="approve"><span class="btn pri">Approve</span><span class="btn">Reject</span><span class="btn">Ask a question</span></div>';
+    [].forEach.call(list.children,function(b){b.setAttribute('aria-selected',b.getAttribute('data-i')==i?'true':'false')});
+  }
+  list.addEventListener('click',function(e){var b=e.target.closest('.alert');if(b)show(+b.getAttribute('data-i'))});
+  show(0);
+})();
+</script>
+
+</html>
